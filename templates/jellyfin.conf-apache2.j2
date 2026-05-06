@@ -7,7 +7,7 @@
   ProxyPass /.well-known/acme-challenge/ !
 {% endif %}
 
-{% if jellyfin_generate_self_signed_certificate and jellyfin_redirect_HTTPS or jellyfin_letsencrypt and letsencrypt_certificate.stat.exists %}
+{% if jellyfin_redirect_HTTPS and (jellyfin_generate_self_signed_certificate or letsencrypt_certificate.stat.exists) %}
   Redirect permanent / https://{{ jellyfin_FQDN | first }}
 {% else %}
   ProxyPreserveHost On
@@ -20,14 +20,14 @@
 {% endif %}
 
 </VirtualHost>
-{% if jellyfin_generate_self_signed_certificate or jellyfin_letsencrypt and letsencrypt_certificate.stat.exists %}
+{% if jellyfin_generate_self_signed_certificate or letsencrypt_certificate.stat.exists %}
 <IfModule mod_ssl.c>
   <VirtualHost *:443>
     ServerName {{ jellyfin_FQDN | first }}
     ServerAlias {{ jellyfin_FQDN | join(' ') }}
 
     SSLEngine on
-{% if jellyfin_letsencrypt %}
+{% if letsencrypt_certificate.stat.exists %}
     SSLCertificateFile /etc/letsencrypt/live/{{ jellyfin_FQDN | first }}/fullchain.pem
     SSLCertificateKeyFile /etc/letsencrypt/live/{{ jellyfin_FQDN | first }}/privkey.pem
 {% else %}
