@@ -9,18 +9,12 @@
   retries: 3
   until: apt_result is succeeded
 
-- name: Checking to see if the Jellyfin PGP key is already present
-  ansible.builtin.stat:
-    path: /usr/share/keyrings/jellyfin.gpg.asc
-  register: keyring
-
 - name: Download Jellyfin Team GPG key
   ansible.builtin.get_url:
     url: https://repo.jellyfin.org/debian/jellyfin_team.gpg.key
     checksum: sha256:a0cde241ae297fa6f0265c0bf15ce9eb9ee97c008904a59ab367a67d59532839
     dest: /usr/share/keyrings/jellyfin.gpg.asc
     mode: '644'
-  when: "'stat' in keyring and not keyring.stat.exists"
 
 - name: Add Jellyfin repository
   apt_repository:
