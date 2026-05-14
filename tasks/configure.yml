@@ -6,12 +6,12 @@
     value: "{{ item.value }}"
   loop:
     - key: PublicPort
-      value: "{{ jellyfin_HTTP_port }}"
+      value: "{{ jellyfin_HTTP_port | string }}"
     - key: PublicHttpsPort
-      value: "{{ jellyfin_HTTPS_port }}"
+      value: "{{ jellyfin_HTTPS_port | string }}"
     - key: HttpServerPortNumber
-      value: "{{ jellyfin_HTTP_port }}"
+      value: "{{ jellyfin_HTTP_port | string }}"
     - key: HttpsPortNumber
-      value: "{{ jellyfin_HTTPS_port }}"
+      value: "{{ jellyfin_HTTPS_port | string }}"
   notify: Restart Jellyfin
 ...
